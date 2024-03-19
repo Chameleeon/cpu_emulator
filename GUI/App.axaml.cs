@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace cpu_emulator;
+namespace GUI;
 
 public partial class App : Application
 {

@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace cpu_emulator;
+namespace GUI;
 
 public partial class MainWindow : Window
 {
