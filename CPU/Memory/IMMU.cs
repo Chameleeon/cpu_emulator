@@ -9,10 +9,16 @@ public interface IMMU
 {
 
     /** <summary>
-     * Maps virtual address to physical address. Used for paging.
-     * Should also implement paging.
+     * Translates virtual address to physical address. Used for paging.
      * </summary>
      * <param name = "address">Virtual address</param>
      */
-    long mapToPhysical(long address);
+    long TranslateAddress(long address);
+
+    /** <summary>
+     * Allocates a block of physical memory to the given virtual address
+     * </summary>
+     * <param name = "virtualAddress">Virtual address</param>
+     */
+    void AllocateBlock(long virtualAddress);
 }

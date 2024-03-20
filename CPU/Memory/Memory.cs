@@ -7,6 +7,22 @@
  */
 public class Memory : IMemSpace
 {
+    private readonly int _memorySize;
+    private readonly int _pageSize;
+    private bool[] _freePages;
+    private byte[] _memory;
+
+    public Memory(int memorySize, int pageSize = 4096)
+    {
+        _memorySize = memorySize;
+        _pageSize = pageSize;
+        _freePages = new bool[memorySize];
+        for (int i = 0; i < _memorySize; i++)
+        {
+            _freePages[i] = true;
+        }
+        _memory = new byte[memorySize * pageSize];
+    }
 
     public byte ReadByte(long address)
     {
@@ -45,9 +61,32 @@ public class Memory : IMemSpace
     {
         return null;
     }
+
     public void WriteBytes(long address, byte[] value)
     {
 
+    }
+
+    // TODO use the virtual address to create a list of references to the physical block
+    public long AllocatePhysicalMemBlock(int virtualAddress)
+    {
+        for (int i = 0; i < _freePages.Length; i++)
+        {
+            if (_freePages[i])
+            {
+                _freePages[i] = false;
+                return i * _pageSize;
+            }
+        }
+        throw new OutOfMemoryException("No free pages available.");
+    }
+
+    // TODO keep references of allocated memory block so that if more than one virtual memory references it,
+    // the actual physical block is marked as free only once there are no more references, otherwise just remove
+    // the reference
+    public void FreePhysicalMemBlock(long address)  // ASSUMES THAT THE ADDRESS RECEIVED IS THE ADDRESS OF A PHYSICAL BLOCK
+    {
+        _freePages[address] = true;
     }
 }
 #pragma warning restore CS1591 // Restore XML comment warning
