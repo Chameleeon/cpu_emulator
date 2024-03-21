@@ -100,19 +100,26 @@ public class Memory : IMemSpace
         for (int i = 7; i >= 0; i--)
         {
             _memory[address + i] = (byte)(value & 0xFF);
-            Console.WriteLine(Convert.ToString(_memory[address + i], 2));
             value = value >> 8;
         }
     }
 
     public byte[] ReadBytes(long address, int length)
     {
-        return null;
+        byte[] array = new byte[length];
+        for (int i = 0; i < length; i++)
+        {
+            array[i] = _memory[address + i];
+        }
+        return array;
     }
 
     public void WriteBytes(long address, byte[] value)
     {
-
+        for (int i = 0; i < value.Length; i++)
+        {
+            _memory[address + i] = value[i];
+        }
     }
 
     // TODO use the virtual address to create a list of references to the physical block
