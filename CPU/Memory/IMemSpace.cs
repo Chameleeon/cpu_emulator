@@ -113,5 +113,5 @@ public interface IMemSpace
      * <param name="address">Memory address</param>
      */
     void FreePhysicalMemBlock(long address);
-}
 
+}

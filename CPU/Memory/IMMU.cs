@@ -14,11 +14,4 @@ public interface IMMU
      * <param name = "address">Virtual address</param>
      */
     long TranslateAddress(long address);
-
-    /** <summary>
-     * Allocates a block of physical memory to the given virtual address
-     * </summary>
-     * <param name = "virtualAddress">Virtual address</param>
-     */
-    void AllocateBlock(long virtualAddress);
 }

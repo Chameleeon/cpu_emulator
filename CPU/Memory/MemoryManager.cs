@@ -33,7 +33,7 @@ public class MemoryManager : IMMU
      * <param name="memorySize">Physical memory size in pages.</param>
      * <param name="pageSize">Memory page size in bytes.</param>
      */
-    public static MemoryManager Initialize(int memorySize, int pageSize)
+    public static MemoryManager Initialize(int memorySize = 2048, int pageSize = 4096)
     {
         if (_instance == null)
         {
@@ -82,7 +82,14 @@ public class MemoryManager : IMMU
     {
         _physicalMemorySize = physicalMemorySize;
         _pageSize = pageSize;
-        _memory = new Memory(_physicalMemorySize, _pageSize);      // create physical memory
+        try
+        {
+            _memory = Memory.Initialize(physicalMemorySize, pageSize);      // create physical memory
+        }
+        catch (InvalidOperationException e)
+        {
+            _memory = Memory.Instance;
+        }
         _pageOffsetBits = (int)Math.Log2(_pageSize);
         _pageNumberBits = _memorySpaceSize - _pageOffsetBits;
         AllocateMemory();

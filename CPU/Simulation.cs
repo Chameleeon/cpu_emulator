@@ -19,6 +19,8 @@ public class Simulation
     {
         MemoryManager mm = MemoryManager.Initialize(2048, 4096);
         long address = mm.TranslateAddress(0x101);
-        Console.WriteLine(address);
+        Memory.Instance.WriteLong(0, -0x1234556789);
+        Console.WriteLine(Convert.ToString(-0x123456789, 2));
+        Console.WriteLine(Memory.Instance.ReadLong(0));
     }
 }
