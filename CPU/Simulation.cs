@@ -29,6 +29,6 @@ public class Simulation
             Console.WriteLine(res[i]);
         }
 
-        Parser.Instance.ParseFile("test.txt");
+        Processor.Instance.ParseFile("test.txt");
     }
 }

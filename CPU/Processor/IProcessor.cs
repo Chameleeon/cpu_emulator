@@ -19,7 +19,7 @@ public interface IProcessor
      * The memory manager of the processor.
      * </summary>
      */
-    IMMU MemoryManager { get; set; }
+    IMMU MemManager { get; set; }
 
     /**
      * <summary>
