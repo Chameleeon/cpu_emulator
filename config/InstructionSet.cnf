@@ -13,13 +13,16 @@
 # +------------------------------------------------+
 #
 #  the [modrr] byte is encoded as follows (mode represents addressing mode,
-#  which can be set to 11 for direct addressing and 00 for indirect addressing,
+#  the first bit represents the addressing mode for the destination register
+#  the second bit represents the addressing mode for the source register
+#  value of 1 indicates that register direct addressing is used
+#  value of 0 indicates that register indirect addressing is used
 #  reg1 is the source register, reg2 is the destination register):
 #
-#    2-bit   3-bit   3-bit
-#  +------------------------+
-#  | mode |  reg1  |  reg2  |
-#  +------------------------+
+#   2-bit   3-bit   3-bit
+#  +-----------------------+
+#  | mode |  dest  |  src  |
+#  +-----------------------+
 
 0x00 mov r r 
 0x01 mov r m

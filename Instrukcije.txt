@@ -11,6 +11,7 @@ mov R2, 1
 mov R1, 10453
 add R2, 1
 cmp R2, R1
+
 je 21
 mov R3, R1
 div R1, R2
