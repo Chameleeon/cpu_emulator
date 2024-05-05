@@ -12,21 +12,21 @@ public interface IProcessor
      * The registers of the processor.
      * </summary>
      */
-    IRegister[] Registers { get; set; }
+    IRegister[] _registers { get; set; }
 
     /**
      * <summary>
-     * The memory manager of the processor.
+     * The memory of the processor
      * </summary>
      */
-    IMMU MemManager { get; set; }
+    IMemSpace _memory { get; set; }
 
     /**
      * <summary>
      * The program counter of the processor.
      * </summary>
      */
-    int ProgramCounter { get; set; }
+    int _programCounter { get; set; }
 
     /**
      * <summary>

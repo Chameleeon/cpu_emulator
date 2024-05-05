@@ -1,0 +1,7 @@
+# contains all the registers and their binary representation
+# for the instruction encoding in the format: [register] [binary]
+
+r1 000
+r2 001
+r3 010
+r4 011

@@ -1,4 +1,4 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1591
 /**
  * <summary>
  * Emulates physical memory (RAM).
@@ -7,68 +7,80 @@
  */
 public class Memory : IMemSpace
 {
-    private readonly int _memorySize;
-    private readonly int _pageSize;
-    private bool[] _freePages;
-    private Utils.LongByteArray _memory;
-
-    // Convert into singleton
-    private static Memory _instance;
-    public static Memory Instance
+    public Memory(int pageSize = 4096)
     {
-        get
-        {
-            if (_instance == null)
-            {
-                throw new InvalidOperationException("Singleton instance has not been initialized.");
-            }
-            return _instance;
-        }
-    }
-    public static Memory Initialize(int memorySize = 2048, int pageSize = 4096)
-    {
-        if (_instance == null)
-        {
-            _instance = new Memory(memorySize, pageSize);
-            return _instance;
-        }
-        else
-        {
-            throw new InvalidOperationException("Singleton instance has already been initialized.");
-        }
-    }
-
-    private Memory(int memorySize, int pageSize = 4096)
-    {
-        _memorySize = memorySize;
         _pageSize = pageSize;
-        _freePages = new bool[memorySize];
-        for (int i = 0; i < _memorySize; i++)
+    }
+    /** <summary>
+     * Memory page size in bytes
+     * Default value is 4kB </summary>
+     */
+    private readonly int _pageSize;
+
+    /** <summary>
+     * Memory space size in bits
+     * </summary>
+     */
+    private const int _memorySpaceSize = 64;
+
+    /**
+     * <summary>
+     * Number of bits used as the page offset
+     * </summary>
+     */
+    private readonly int _pageOffsetBits;
+
+    /**
+     * <summary>
+     * Number of bits used as the page number
+     * </summary>
+     */
+    private readonly int _pageNumberBits;
+
+    private Dictionary<long, byte[]> _pageTable = new Dictionary<long, byte[]>();
+
+    /**
+     * <summary>
+     * Used for paging.
+     * </summary>
+     * <param name="virtualAddress">Virtual address</param>
+     * <returns>The memory page for the given address</returns>
+     */
+    public byte[] getPage(long virtualAddress)
+    {
+        long pageNumber = (virtualAddress >> _pageOffsetBits) & ((1 << _pageNumberBits) - 1);
+        if (_pageTable.ContainsKey(pageNumber) == false)
         {
-            _freePages[i] = true;
+            _pageTable[pageNumber] = new byte[_pageSize];
         }
-        _memory = new Utils.LongByteArray(memorySize * pageSize);
+        return _pageTable[pageNumber];
     }
 
     public byte ReadByte(long address)
     {
-        return _memory[address];
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
+        return getPage(address)[pageOffset];
     }
     public void WriteByte(long address, byte value)
     {
-        _memory[address] = value;
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
+        getPage(address)[pageOffset] = value;
     }
 
     public short ReadShort(long address)
     {
-        short higherByte = _memory[address];
-        short lowerByte = _memory[address + 1];
+        byte[] page = getPage(address);
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
+        short higherByte = page[pageOffset];
+        short lowerByte = page[pageOffset + 1];
         return (short)((higherByte << 8) | lowerByte);
     }
     public void WriteShort(long address, short value)
     {
-        _memory[address] = (byte)(value >> 8);
-        _memory[address + 1] = (byte)(value);
+        byte[] page = getPage(address);
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
+        page[pageOffset] = (byte)(value >> 8);
+        page[pageOffset + 1] = (byte)value;
     }
 
     public int ReadInt(long address)
@@ -88,59 +100,47 @@ public class Memory : IMemSpace
     public long ReadLong(long address)
     {
         long value = 0;
+        byte[] page = getPage(address);
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
 
         for (int i = 0; i < 8; i++)
         {
-            value = (value << 8) | _memory[address + i];
+            value = (value << 8) | page[address + i];
         }
         return value;
     }
     public void WriteLong(long address, long value)
     {
+        byte[] page = getPage(address);
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
+
         for (int i = 7; i >= 0; i--)
         {
-            _memory[address + i] = (byte)(value & 0xFF);
+            page[pageOffset + i] = (byte)(value & 0xFF);
             value = value >> 8;
         }
     }
 
     public byte[] ReadBytes(long address, int length)
     {
+        byte[] page = getPage(address);
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
+
         byte[] array = new byte[length];
         for (int i = 0; i < length; i++)
         {
-            array[i] = _memory[address + i];
+            array[i] = page[pageOffset + i];
         }
         return array;
     }
 
     public void WriteBytes(long address, byte[] value)
     {
+        byte[] page = getPage(address);
+        long pageOffset = address & ((1 << _pageOffsetBits) - 1);
         for (int i = 0; i < value.Length; i++)
         {
-            _memory[address + i] = value[i];
+            page[pageOffset + i] = value[i];
         }
-    }
-
-    // TODO use the virtual address to create a list of references to the physical block
-    public long AllocatePhysicalMemBlock(int virtualAddress)
-    {
-        for (int i = 0; i < _freePages.Length; i++)
-        {
-            if (_freePages[i])
-            {
-                _freePages[i] = false;
-                return i * _pageSize;
-            }
-        }
-        throw new OutOfMemoryException("No free pages available.");
-    }
-
-    // TODO keep references of allocated memory block so that if more than one virtual memory references it,
-    // the actual physical block is marked as free only once there are no more references, otherwise just remove
-    // the reference
-    public void FreePhysicalMemBlock(long address)  // ASSUMES THAT THE ADDRESS RECEIVED IS THE ADDRESS OF A PHYSICAL BLOCK
-    {
-        _freePages[address] = true;
     }
 }

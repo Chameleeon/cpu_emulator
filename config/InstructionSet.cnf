@@ -1,0 +1,75 @@
+# contains the instruction set for the cpu emulator
+# instruction format: [opcode] [instruction] [destination] [source]
+# operand values [r | m | imm ] for [register | memory | immediate]
+# for 2 operand instructions, the order is [destination] [source]
+# for 1 operand instructions such as jumps, the operand is the location of the address of the instruction
+# being jumped to and the comparison result is always in r1
+# if the second operand is a memory location, the memory address is encoded after the instruction
+# the encoding of the instruction is as follows:
+#
+#  8-bit     8-bit      64-bit(opt)      64-bit(opt)
+# +------------------------------------------------+
+# | opcode | modrr |     address     |     imm     | 
+# +------------------------------------------------+
+#
+#  the [modrr] byte is encoded as follows (mode represents addressing mode,
+#  which can be set to 11 for direct addressing and 00 for indirect addressing,
+#  reg1 is the source register, reg2 is the destination register):
+#
+#    2-bit   3-bit   3-bit
+#  +------------------------+
+#  | mode |  reg1  |  reg2  |
+#  +------------------------+
+
+0x00 mov r r 
+0x01 mov r m
+0x02 mov m r
+0x03 mov r imm
+0x04 add r r
+0x05 add r m
+0x07 add r imm
+0x08 sub r r
+0x09 sub r m
+0x0B sub r imm
+0x0C mul r r
+0x0D mul r m
+0x0F mul r imm
+0x10 div r r
+0x11 div r m
+0x13 div r imm
+0x14 cmp r r
+0x15 cmp r m
+0x17 cmp r imm
+0x18 and r r
+0x19 and r m
+0x1B and r imm
+0x1C or r r
+0x1D or r m
+0x1F or r imm
+0x20 not r
+0x21 not m
+0x22 xor r r
+0x23 xor r m
+0x25 xor r imm
+0x26 jmp r
+0x27 jmp m
+0x28 jmp imm
+0x29 je r
+0x2A je m
+0x2B je imm
+0x2C jne r
+0x2D jne m
+0x2F jne imm
+0x30 jge r
+0x31 jge m
+0x33 jge imm
+0x34 jle r
+0x35 jle m
+0x37 jle imm
+0x38 write r
+0x39 write m
+0x3B write imm
+0x3C read r
+0x3D read m
+0x3F read imm
+0x40 halt

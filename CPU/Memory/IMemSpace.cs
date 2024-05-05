@@ -99,19 +99,13 @@ public interface IMemSpace
      */
     void WriteBytes(long address, byte[] value);
     /**
-    /**<summary>
-     * Allocates a free physical memory block to a virtual address
-     * <summary>
-     * <param name="address">Memory address</param>
-     * <returns>Address of physical block allocated to the virtual address</returns>
-     */
-    long AllocatePhysicalMemBlock(int virtualAddress);
+      
     /**
-    /**<summary>
-     * Frees a memory block which is no longer needed
      * <summary>
-     * <param name="address">Memory address</param>
+     * Used for paging.
+     * </summary>
+     * <param name="virtualAddress">Virtual address</param>
+     * <returns>The memory page for the given address</returns>
      */
-    void FreePhysicalMemBlock(long address);
-
+    byte[] getPage(long virtualAddress);
 }

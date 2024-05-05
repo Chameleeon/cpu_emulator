@@ -17,18 +17,20 @@ public class Simulation
 
     public void run()
     {
-        MemoryManager mm = MemoryManager.Initialize(2048, 4096);
-        long address = mm.TranslateAddress(0x101);
-        Memory.Instance.WriteLong(0, -4886718345);
-        Console.WriteLine(Memory.Instance.ReadLong(0));
-        byte[] bytes = new byte[] { 0x01, 0x02, 0x03, 0x04 };
-        Memory.Instance.WriteBytes(0x100, bytes);
-        byte[] res = Memory.Instance.ReadBytes(0x100, 4);
-        for (int i = 0; i < 4; i++)
+        Memory mem = new Memory(4096);
+        mem.WriteLong(0, -4886718345);
+        Console.WriteLine(mem.ReadLong(0));
+        byte[] bytes = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x10 };
+        mem.WriteBytes(0x100, bytes);
+        byte[] res = mem.ReadBytes(0x100, 5);
+
+        for (int i = 0; i < 5; i++)
         {
             Console.WriteLine(res[i]);
         }
 
-        Processor.Instance.ParseFile("test.txt");
+        new Parser();
+        // Parser.ParseInstructions("Instrukcije.txt");
+
     }
 }

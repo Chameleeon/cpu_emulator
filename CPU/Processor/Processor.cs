@@ -1,18 +1,19 @@
 public class Processor : IProcessor
 {
-    public IRegister[] Registers { get; set; } = new Register64[4];
+    public IRegister[] _registers { get; set; }
 
-    public IMMU MemManager { get; set; }
+    public int _programCounter { get; set; }
 
-    public int ProgramCounter { get; set; }
+    public IMemSpace _memory { get; set; }
 
-    public Processor(int memorySizeInPages = 2048, int pageSize = 4096)
+    public Processor(int pageSize = 4096, int registerCount = 4)
     {
-        MemManager = MemoryManager.Initialize(memorySizeInPages, pageSize);
-        ProgramCounter = 0;
-        for (int i = 0; i < Registers.Length; i++)
+        _memory = new Memory(pageSize);
+        _programCounter = 0;
+        _registers = new Register64[registerCount];
+        for (int i = 0; i < _registers.Length; i++)
         {
-            Registers[i] = new Register64();
+            _registers[i] = new Register64();
         }
     }
 
