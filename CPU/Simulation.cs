@@ -17,18 +17,13 @@ public class Simulation
 
     public void run()
     {
-        Memory mem = new Memory(4096);
-        mem.WriteLong(0, -4886718345);
-        Console.WriteLine(mem.ReadLong(0));
-        byte[] bytes = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x10 };
-        mem.WriteBytes(0x100, bytes);
-        byte[] res = mem.ReadBytes(0x100, 5);
-
-        for (int i = 0; i < 5; i++)
-        {
-            Console.WriteLine(res[i]);
-        }
-
-        Parser.Instance.ParseInstructions("testt.txt");
+        Compiler.Instance.Compile("testt.txt", "program2");
+        Processor cpu = new Processor();
+        cpu.ExecuteProgram("program2");
+        byte[] instructions = cpu._memory.ReadBytes(0, 60);
+        // foreach (byte b in instructions)
+        // {
+        //     Console.Write(b.ToString("X2") + " ");
+        // }
     }
 }

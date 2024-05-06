@@ -10,6 +10,8 @@ public class Memory : IMemSpace
     public Memory(int pageSize = 4096)
     {
         _pageSize = pageSize;
+        _pageOffsetBits = (int)Math.Log(_pageSize, 2);
+        _pageNumberBits = 64 - _pageOffsetBits;
     }
     /** <summary>
      * Memory page size in bytes
@@ -43,12 +45,12 @@ public class Memory : IMemSpace
      * <summary>
      * Used for paging.
      * </summary>
-     * <param name="virtualAddress">Virtual address</param>
+     * <param name="address">Virtual address</param>
      * <returns>The memory page for the given address</returns>
      */
-    public byte[] getPage(long virtualAddress)
+    public byte[] getPage(long address)
     {
-        long pageNumber = (virtualAddress >> _pageOffsetBits) & ((1 << _pageNumberBits) - 1);
+        long pageNumber = (address >> _pageOffsetBits) & ((1 << _pageNumberBits) - 1);
         if (_pageTable.ContainsKey(pageNumber) == false)
         {
             _pageTable[pageNumber] = new byte[_pageSize];
@@ -105,7 +107,7 @@ public class Memory : IMemSpace
 
         for (int i = 0; i < 8; i++)
         {
-            value = (value << 8) | page[address + i];
+            value = (value << 8) | page[pageOffset + i];
         }
         return value;
     }

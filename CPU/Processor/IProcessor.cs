@@ -26,20 +26,14 @@ public interface IProcessor
      * The program counter of the processor.
      * </summary>
      */
-    int _programCounter { get; set; }
+    long _programCounter { get; set; }
 
     /**
      * <summary>
-     * Executes an instruction.
-     * </summary>
-     */
-    void ExecuteInstruction();
-    /**
-     * <summary>
-     * Loads instructions from a file into memory
+     * Executes a program provided the input binary file
      * </summary>
      * <param name="filePath">Input file path</param>
      */
-    void ParseInstructions(string filePath);
+    void ExecuteProgram(string filePath);
 }
 

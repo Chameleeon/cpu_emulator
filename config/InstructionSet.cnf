@@ -11,8 +11,7 @@
 # +------------------------------------------------+
 # | opcode | modrr |     address     |     imm     | 
 # +------------------------------------------------+
-#
-#  the [modrr] byte is encoded as follows (mode represents addressing mode,
+# the [modrr] byte is encoded as follows (mode represents addressing mode,
 #  the first bit represents the addressing mode for the destination register
 #  the second bit represents the addressing mode for the source register
 #  value of 1 indicates that register direct addressing is used
@@ -30,49 +29,44 @@
 0x03 mov r imm
 0x04 add r r
 0x05 add r m
-0x07 add r imm
-0x08 sub r r
-0x09 sub r m
-0x0B sub r imm
-0x0C mul r r
-0x0D mul r m
-0x0F mul r imm
-0x10 div r r
-0x11 div r m
-0x13 div r imm
-0x14 cmp r r
-0x15 cmp r m
-0x17 cmp r imm
-0x18 and r r
-0x19 and r m
-0x1B and r imm
-0x1C or r r
-0x1D or r m
-0x1F or r imm
-0x20 not r
-0x21 not m
-0x22 xor r r
-0x23 xor r m
-0x25 xor r imm
-0x26 jmp r
-0x27 jmp m
-0x28 jmp imm
-0x29 je r
-0x2A je m
-0x2B je imm
-0x2C jne r
-0x2D jne m
-0x2F jne imm
-0x30 jge r
-0x31 jge m
-0x33 jge imm
-0x34 jle r
-0x35 jle m
-0x37 jle imm
-0x38 write r
-0x39 write m
-0x3B write imm
-0x3C read r
-0x3D read m
-0x3F read imm
-0x40 halt
+0x06 add r imm
+0x07 sub r r
+0x08 sub r m
+0x09 sub r imm
+0x0A mul r r
+0x0B mul r m
+0x0C mul r imm
+0x0D div r r
+0x0E div r m
+0x0F div r imm
+0x10 cmp r r
+0x11 cmp r m
+0x12 cmp r imm
+0x13 and r r
+0x14 and r m
+0x15 and r imm
+0x16 or r r
+0x17 or r m
+0x18 or r imm
+0x19 not r
+0x1A xor r r
+0x1B xor r m
+0x1C xor r imm
+0x1D jmp r
+0x1E jmp m
+0x1F jmp imm
+0x20 je r
+0x21 je m
+0x22 je imm
+0x23 jne r
+0x24 jne m
+0x25 jne imm
+0x26 jge r
+0x27 jge m
+0x28 jge imm
+0x29 jle r
+0x2A jle m
+0x2B jle imm
+0x2C write r
+0x2D read r
+0x2E halt

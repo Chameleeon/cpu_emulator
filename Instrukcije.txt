@@ -1,18 +1,18 @@
 mov R4, 11
-mov 0x0, R4 
-mov 0xC0, R4
-mov 0x80, R4
-mov 0x40, R4
-mov R4, 0x0
-mov 0x0, R4 
-mov 0xC0, R4
+mov [0x0], R4 
+mov [0xC0], R4
+mov [0x80], R4
+mov [0x40], R4
+mov R4, [0x0]
+mov [0x0], R4 
+mov [0xC0], R4
 mov R4, 1
 mov R2, 1
 mov R1, 10453
 add R2, 1
 cmp R2, R1
 
-je 21
+je [0x0]
 mov R3, R1
 div R1, R2
 mul R1, R2
@@ -20,3 +20,4 @@ cmp R1, R3
 jne [0x0]
 mov R4, 0
 write R4
+halt

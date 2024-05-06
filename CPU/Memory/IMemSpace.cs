@@ -107,5 +107,5 @@ public interface IMemSpace
      * <param name="virtualAddress">Virtual address</param>
      * <returns>The memory page for the given address</returns>
      */
-    byte[] getPage(long virtualAddress);
+    public byte[] getPage(long virtualAddress);
 }
