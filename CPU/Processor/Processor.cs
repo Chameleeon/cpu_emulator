@@ -6,12 +6,10 @@ public class Processor : IProcessor
     private Dictionary<byte, Action<byte, long>> _singleOperandMemOps = new Dictionary<byte, Action<byte, long>>();
     private Dictionary<byte, Action<byte>> _noOperandOps = new Dictionary<byte, Action<byte>>();
 
-    private bool _zeroFlag;
-    private bool _signFlag;
     private bool _halted = false;
 
     public IRegister[] _registers { get; set; }
-    private IRegister _flagsRegister = new Register64();
+    public IRegister _flagsRegister = new Register64();
 
     public long _programCounter { get; set; }
 
@@ -28,7 +26,6 @@ public class Processor : IProcessor
         }
         InitializeInstructions();
     }
-
     private long _nextFreeAddress = 0;
 
     private int LoadProgram(string input)
@@ -63,7 +60,6 @@ public class Processor : IProcessor
     {
         int instruction = 0;
         int programSize = LoadProgram(input);
-        byte[] program = _memory.ReadBytes(0, programSize);
         while (_programCounter < programSize)
         {
             byte nextInstructionOpcode = _memory.ReadByte(_programCounter);
@@ -140,7 +136,7 @@ public class Processor : IProcessor
             long val;
             if ((modrr & 0x40) == 0x40)
             {
-                val = _memory.ReadLong(_registers[r2].Value);
+                val = _registers[r2].Value;
             }
             else
             {
@@ -346,14 +342,14 @@ public class Processor : IProcessor
         RegisterSingleOperandMemOperation(0x27, (modrr, addr) => { if ((_flagsRegister.Value & 0x0080) != 0x0080 || (_flagsRegister.Value & 0x0040) == 0x0040) _programCounter = _memory.ReadLong(addr); });
         RegisterSingleOperandMemOperation(0x28, (modrr, imm) => { if ((_flagsRegister.Value & 0x0080) != 0x0080 || (_flagsRegister.Value & 0x0040) == 0x0040) _programCounter = imm; });
 
-        //JLE
+        //JL
         RegisterSingleOperandRegOperation(0x29, (modrr) =>
         {
             byte register = (byte)((modrr & 0x38) >> 3);
-            if ((_flagsRegister.Value & 0x0080) == 0x0080 || (_flagsRegister.Value & 0x0040) == 0x0040) _programCounter = _registers[register].Value - 2;
+            if ((_flagsRegister.Value & 0x0040) == 0x0040) _programCounter = _registers[register].Value - 2;
         });
-        RegisterSingleOperandMemOperation(0x2A, (modrr, addr) => { if ((_flagsRegister.Value & 0x0080) == 0x0080 || (_flagsRegister.Value & 0x0040) == 0x0040) _programCounter = _memory.ReadLong(addr) - 10; });
-        RegisterSingleOperandMemOperation(0x2B, (modrr, imm) => { if ((_flagsRegister.Value & 0x0080) == 0x0080 || (_flagsRegister.Value & 0x0040) == 0x0040) _programCounter = imm - 10; });
+        RegisterSingleOperandMemOperation(0x2A, (modrr, addr) => { if ((_flagsRegister.Value & 0x0080) == 0x0080) _programCounter = _memory.ReadLong(addr) - 10; });
+        RegisterSingleOperandMemOperation(0x2B, (modrr, imm) => { if ((_flagsRegister.Value & 0x0080) == 0x0080) _programCounter = imm - 10; });
 
         //WRITE
         RegisterSingleOperandRegOperation(0x2C, (modrr) =>

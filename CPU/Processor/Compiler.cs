@@ -71,7 +71,7 @@ public class Compiler
                     Regex instruction;
                     string instructionPattern;
 
-                    instructionPattern = @"(?<instruction>[a-zA-Z0-9_]+)(\s+(?<operand1>[a-zA-Z0-9_]+|\[[a-zA-Z0-9_]+\])\s*(,\s*(?<operand2>[a-zA-Z0-9_]+|\[[a-zA-Z0-9_]+\])\s*){0,1}){0,1}|\s*|(?<comment>#*)";
+                    instructionPattern = @"(?<instruction>[a-zA-Z0-9_]+)(\s+(?<operand1>[a-zA-Z0-9_]+|\[[a-zA-Z0-9_]+\])\s*(,\s*(?<operand2>-{0,1}[a-zA-Z0-9_]+|\[[a-zA-Z0-9_]+\])\s*){0,1}){0,1}|\s*|(?<comment>#*)";
                     instruction = new Regex(instructionPattern);
                     Match match = instruction.Match(line);
                     if (match.Success)
