@@ -15,15 +15,14 @@ public class Simulation
     private Simulation()
     { }
 
-    public void run()
+    public void Run()
     {
-        Compiler.Instance.Compile("testt.txt", "program2");
+        Compiler.Instance.Compile("testlru.txt", "lrutest");
         Processor cpu = new Processor();
-        cpu.ExecuteProgram("program2");
-        byte[] instructions = cpu._memory.ReadBytes(0, 60);
-        // foreach (byte b in instructions)
-        // {
-        //     Console.Write(b.ToString("X2") + " ");
-        // }
+        cpu.ExecuteProgram("lrutest");
+        int[] levelSizes = { 16, 16 };
+        CacheSimulator cs = new CacheSimulator(2, 4, levelSizes);
+        cs.SimulateLRU("lrutest_mem_access.txt");
+        cs.SimulateBelady("lrutest_mem_access.txt");
     }
 }
