@@ -1,9 +1,8 @@
 #!/bin/bash
 
-command="dotnet run --project Simulation/Simulation.csproj --"
-
-for arg in "$@"; do
-    command+=" $arg"
-done
-
-eval $command
+if [[ "$1" == "-t" ]]; then
+    shift
+    dotnet test
+else
+    dotnet run --project Simulation/Simulation.csproj -- "$@"
+fi

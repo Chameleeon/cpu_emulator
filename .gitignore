@@ -402,3 +402,4 @@ GUI/obj
 CPU/bin
 CPU/obj
 # *.txt
+*.zip
