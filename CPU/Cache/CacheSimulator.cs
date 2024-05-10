@@ -2,23 +2,25 @@ using System.Text.RegularExpressions;
 public class CacheSimulator
 {
     private int _numOfLevels;
-    private int _cacheLineSize;
     private int[] _levelSizes;
     private CacheLevel[] _cacheLevels;
+    private int[] _associativityPerLevel;
+    private int _cacheLineSize;
 
-    public CacheSimulator(int numOfLevels, int cacheLineSize, int[] levelSizes)
+    public CacheSimulator(int numOfLevels, int[] levelSizes, int[] associativityPerLevel, int cacheLineSize)
     {
         this._numOfLevels = numOfLevels;
-        this._cacheLineSize = cacheLineSize;
         this._cacheLevels = new CacheLevel[numOfLevels];
         this._levelSizes = levelSizes;
+        this._associativityPerLevel = associativityPerLevel;
+        this._cacheLineSize = cacheLineSize;
     }
 
-    public void SimulateLRU(string inputFile)
+    public Tuple<int, int> SimulateLRU(string inputFile)
     {
         for (int i = 0; i < _numOfLevels; i++)
         {
-            _cacheLevels[i] = new CacheLevel(_levelSizes[i], 4, 2);
+            _cacheLevels[i] = new CacheLevel(_levelSizes[i], _cacheLineSize, _associativityPerLevel[i]);
         }
         int hits = 0;
         int misses = 0;
@@ -30,27 +32,45 @@ public class CacheSimulator
                 bool hit = false;
                 long address = long.Parse(line, System.Globalization.NumberStyles.HexNumber);
 
+                long evictedAddress = -1;
+                long evictedAddress2 = -1;
                 for (int i = 0; i < _numOfLevels; i++)
                 {
                     if (_cacheLevels[i].IsInLRUCache(address))
                     {
                         hit = true;
                         hits++;
-                        _cacheLevels[i].LRUAdd(address);
+                        if (i > 0)
+                        {
+                            evictedAddress = _cacheLevels[0].Evict(address);
+                        }
+                        _cacheLevels[0].LRUAdd(address);
                         break;
+                    }
+                }
+
+                if (evictedAddress != -1)
+                {
+                    for (int i = 1; i < _numOfLevels; i++)
+                    {
+                        if (evictedAddress != -1)
+                        {
+                            evictedAddress = _cacheLevels[i].Evict(evictedAddress2);
+                            _cacheLevels[i].LRUAdd(evictedAddress);
+                        }
                     }
                 }
 
                 if (!hit)
                 {
                     misses++;
-                    long evictedAddress = _cacheLevels[0].Evict(address);
+                    evictedAddress2 = _cacheLevels[0].Evict(address);
                     for (int i = 1; i < _numOfLevels; i++)
                     {
-                        if (evictedAddress != -1)
+                        if (evictedAddress2 != -1)
                         {
-                            _cacheLevels[i].LRUAdd(evictedAddress);
-                            evictedAddress = _cacheLevels[i].Evict(evictedAddress);
+                            evictedAddress = _cacheLevels[i].Evict(evictedAddress2);
+                            _cacheLevels[i].LRUAdd(evictedAddress2);
                         }
                     }
                     _cacheLevels[0].LRUAdd(address);
@@ -58,9 +78,10 @@ public class CacheSimulator
             }
         }
         Console.WriteLine("LRU>>: hits: " + hits + " misses: " + misses);
+        return new Tuple<int, int>(hits, misses);
     }
 
-    public void SimulateBelady(string inputFile)
+    public Tuple<int, int> SimulateBelady(string inputFile)
     {
         int hits = 0;
         int misses = 0;
@@ -84,6 +105,7 @@ public class CacheSimulator
 
             for (int i = 0; i < memoryAccesses.Count; i++)
             {
+                long evictedAddress = -1;
                 bool hit = false;
                 long address = memoryAccesses[i];
                 for (int j = 0; j < _numOfLevels; j++)
@@ -92,21 +114,38 @@ public class CacheSimulator
                     {
                         hit = true;
                         hits++;
-                        _cacheLevels[j].BeladyAdd(address);
+                        if (j > 0)
+                        {
+                            evictedAddress = _cacheLevels[0].Evict(address);
+                        }
+                        _cacheLevels[0].BeladyAdd(address);
                         break;
+                    }
+                }
+
+
+                if (evictedAddress != -1)
+                {
+                    for (int j = 1; j < _numOfLevels; j++)
+                    {
+                        if (evictedAddress != -1)
+                        {
+                            _cacheLevels[j].LRUAdd(evictedAddress);
+                            evictedAddress = _cacheLevels[j].Evict(evictedAddress);
+                        }
                     }
                 }
 
                 if (!hit)
                 {
                     misses++;
-                    long evictedAddress = _cacheLevels[0].EvictBelady(address);
+                    long evictedAddress2 = _cacheLevels[0].EvictBelady(address);
                     for (int j = 1; j < _numOfLevels; j++)
                     {
-                        if (evictedAddress != -1)
+                        if (evictedAddress2 != -1)
                         {
-                            _cacheLevels[j].BeladyAdd(evictedAddress);
-                            evictedAddress = _cacheLevels[j].EvictBelady(evictedAddress);
+                            evictedAddress = _cacheLevels[j].EvictBelady(evictedAddress2);
+                            _cacheLevels[j].BeladyAdd(evictedAddress2);
                         }
                     }
                     _cacheLevels[0].BeladyAdd(address);
@@ -117,6 +156,7 @@ public class CacheSimulator
                 }
             }
             Console.WriteLine("BELADY>>: hits: " + hits + " misses: " + misses);
+            return new Tuple<int, int>(hits, misses);
         }
     }
 

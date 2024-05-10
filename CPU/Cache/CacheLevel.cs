@@ -4,7 +4,6 @@ public class CacheLevel
 {
     private int _numOfLines;
     private int _lineSize;
-    // private CacheSet[] _sets;
     private int _offsetBits;
     private int _indexBits;
     private int _tagBits;
@@ -70,11 +69,10 @@ public class CacheLevel
         int index = (int)((long)address >> _offsetBits) & (1 << _indexBits) - 1;
         int tag = (int)((long)address >> (_offsetBits + _indexBits)) & (1 << _tagBits) - 1;
         long evictedAddressBlock = -1;
-        if (_lruSets.ContainsKey(index) && _lruSets[index].Count == _numOfLines)
+        if (_lruSets.ContainsKey(index) && _lruSets[index].Count >= _numOfLines)
         {
             long tagToEvict = _lruSets[index].Dequeue();
             evictedAddressBlock = tagToEvict << (_offsetBits + _indexBits) | index << _offsetBits;
-            Console.WriteLine("EVICTING>>:  " + evictedAddressBlock);
         }
         return evictedAddressBlock;
     }
@@ -116,12 +114,11 @@ public class CacheLevel
         int index = (int)((long)address >> _offsetBits) & (1 << _indexBits) - 1;
         int tag = (int)((long)address >> (_offsetBits + _indexBits)) & (1 << _tagBits) - 1;
         long evictedAddressBlock = -1;
-        if (_beladySets.ContainsKey(index) && _beladySets[index].Count == _numOfLines)
+        if (_beladySets.ContainsKey(index) && _beladySets[index].Count >= _numOfLines)
         {
             long tagToEvict = GetTagToEvict(index);
 
             evictedAddressBlock = tagToEvict << (_offsetBits + _indexBits) | index << _offsetBits;
-            Console.WriteLine("EVICTING>>:  " + evictedAddressBlock);
             _beladySets[index].Remove(tagToEvict);
         }
         return evictedAddressBlock;

@@ -17,12 +17,13 @@ public class Simulation
 
     public void Run()
     {
-        Compiler.Instance.Compile("testlru.txt", "lrutest");
+        Compiler.Instance.Compile("cache_test.txt", "cache_test");
         Processor cpu = new Processor();
-        cpu.ExecuteProgram("lrutest");
+        cpu.ExecuteProgram("cache_test");
         int[] levelSizes = { 16, 16 };
-        CacheSimulator cs = new CacheSimulator(2, 4, levelSizes);
-        cs.SimulateLRU("lrutest_mem_access.txt");
-        cs.SimulateBelady("lrutest_mem_access.txt");
+        int[] associativity = { 2, 2 };
+        CacheSimulator cs = new CacheSimulator(2, levelSizes, associativity, 4);
+        cs.SimulateLRU("cache_test_mem_access.txt");
+        cs.SimulateBelady("cache_test_mem_access.txt");
     }
 }
