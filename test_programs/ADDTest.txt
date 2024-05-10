@@ -1,0 +1,9 @@
+mov r1, 1000
+mov r2, 2000
+add r1, r2
+add r2, 1000
+mov r3, 20
+mov r4, 0x1000
+mov [r4], r3
+mov r3, 15
+add r3, [0x1000]

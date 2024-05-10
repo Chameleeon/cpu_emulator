@@ -1,0 +1,12 @@
+mov r1, 20
+mov r2, 30
+add r2, r1
+mov r3, 30
+mov r4, 0x0
+mov [0x10000], r4
+cmp r2, r3
+jne 74
+mov r4, 0x1
+read r4
+write r4
+halt

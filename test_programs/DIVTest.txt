@@ -1,0 +1,8 @@
+mov r1, 10
+mov r2, 2
+div r1, r2
+div r2, 2
+mov r3, 0x1000
+mov [r3], 2
+mov r4, 10
+div r4, [0x1000]

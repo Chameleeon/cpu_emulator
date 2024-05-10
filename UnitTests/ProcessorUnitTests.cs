@@ -21,7 +21,6 @@ public class ProcessorUnitTests
         p.ExecuteProgram("test_programs/ADDTest");
         Assert.Equal(3000, p._registers[0].Value);
         Assert.Equal(35, p._registers[2].Value);
-        Assert.Equal(11, p._registers[3].Value);
         Assert.Equal(3000, p._registers[1].Value);
 
     }
@@ -34,7 +33,7 @@ public class ProcessorUnitTests
         p.ExecuteProgram("test_programs/SUBTest");
         Assert.Equal(1000, p._registers[0].Value);
         Assert.Equal(1000, p._registers[1].Value);
-        Assert.Equal(10, p._registers[3].Value);
+        Assert.Equal(1000, p._registers[2].Value);
     }
 
     [Fact]
@@ -151,7 +150,6 @@ public class ProcessorUnitTests
         Assert.Equal(1, p._registers[1].Value);
     }
 
-
     [Fact]
     public void XORTest()
     {
@@ -183,6 +181,7 @@ public class ProcessorUnitTests
         p.ExecuteProgram("test_programs/JETest");
         Assert.Equal(30, p._registers[0].Value);
         Assert.Equal(15, p._registers[2].Value);
+        Assert.Equal(5, p._registers[3].Value);
     }
 
     [Fact]

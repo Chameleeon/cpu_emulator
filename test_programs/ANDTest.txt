@@ -1,0 +1,8 @@
+mov r1, 2
+mov r2, 3
+and r1, r2
+and r2, 1
+mov r3, 0x1000
+mov [r3], 15
+mov r4, 14
+and r4, [0x1000]

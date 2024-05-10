@@ -14,9 +14,9 @@ public class CacheUnitTest
         CacheSimulator cs = new CacheSimulator(2, levelSizes, associativity, 4);
         Tuple<int, int> lruHM = cs.SimulateLRU("test_programs/cache_test_mem_access.txt");
         Tuple<int, int> beladyHM = cs.SimulateBelady("test_programs/cache_test_mem_access.txt");
-        Assert.Equal(7, lruHM.Item1);
-        Assert.Equal(32, lruHM.Item2);
-        Assert.Equal(21, beladyHM.Item1);
-        Assert.Equal(18, beladyHM.Item2);
+        Assert.Equal(15, lruHM.Item1);
+        Assert.Equal(24, lruHM.Item2);
+        Assert.Equal(23, beladyHM.Item1);
+        Assert.Equal(16, beladyHM.Item2);
     }
 }

@@ -401,4 +401,4 @@ GUI/bin
 GUI/obj
 CPU/bin
 CPU/obj
-*.txt
+# *.txt

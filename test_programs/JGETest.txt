@@ -1,0 +1,14 @@
+mov r3, 8
+cmp r3, 4
+jge 50
+mov r3, 1
+mov r4, 5
+mov r1, 15 ##
+cmp r3, 8
+jge 90
+mov r3, 2
+mov r2, 10 ##
+cmp r2, 12
+jge 130
+mov r4, 0
+mov r1, 2
