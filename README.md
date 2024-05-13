@@ -1,5 +1,5 @@
 # cpu_emulator
-Simple 4 register CPU emulator and cache simulator written in C#.
+Simple 4 register CPU emulator, ASM compiler and cache simulator written in C#.
 
 ## NOTE: .NET 8.0 is required to run the project
 
