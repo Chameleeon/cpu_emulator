@@ -26,5 +26,4 @@ dotnet test
 ```
 ./run.sh -in cpu_test.txt -o cpu_test
 ./run.sh -in cache_test.txt -o cache_test
-
 ```
