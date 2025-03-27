@@ -27,3 +27,10 @@ dotnet test
 ./run.sh -in cpu_test.txt -o cpu_test
 ./run.sh -in cache_test.txt -o cache_test
 ```
+
+# Instruction set
+
+You can check out the supported instruction set [here](https://github.com/Chameleeon/cpu_emulator/blob/main/config/InstructionSet.cnf).
+
+# Available registers
+
