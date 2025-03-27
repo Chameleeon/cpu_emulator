@@ -34,3 +34,4 @@ You can check out the supported instruction set [here](https://github.com/Chamel
 
 # Available registers
 
+[This file](https://github.com/Chameleeon/cpu_emulator/blob/main/config/Registers.cnf) contains active registers. Default number of registers is 4, but the emulator supports up to 16. If the user wants to simulate more registers, the registers should be added to the file following the current pattern.
